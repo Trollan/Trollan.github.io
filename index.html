@@ -5,6 +5,20 @@
     <title>Unity WebGL Player | Jam42</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+      body {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      #unity-container {
+        background-color: #1a1a1a;
+      }
+
+      #unity-warning {
+        color: #ffdd00;
+      }
+    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -19,13 +33,6 @@
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-build-title">Jam42</div>
-        <div id="unity-malaga42-reference"><img src="TemplateData/malaga42_logo.png" alt="Málaga 42 Logo"></div>
-      </div>
-    </div>
-    <script>
-      </div>
-    </div>
-    <script>
       </div>
     </div>
     <script>
@@ -73,48 +80,49 @@
       };
 
       // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaledby window.devicePixelRatio)
-// Set this to false if you want to decouple this synchronization from
-// happening inside the engine, and you would instead like to size up
-// the canvas DOM size and WebGL render target sizes yourself.
-// config.matchWebGLToCanvasSize = false;
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    // Mobile device style: fill the whole browser client area with the game canvas:
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
 
-    var meta =  document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    container.className = "unity-mobile";
-    canvas.className = "unity-mobile";
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
 
-    // To lower canvas resolution on mobile devices to gain some
-    // performance, uncomment the following line:
-    // config.devicePixelRatio = 1;
+        var meta =  document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
 
-    unityShowBanner('WebGL builds are not supported on mobile devices.');
-  } else {
-    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
 
-    canvas.style.width = "1280px";
-    canvas.style.height = "720px";
-  }
+        unityShowBanner('WebGL builds are not supported on mobile devices.');
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-  canvas.style.background = "url('" + buildUrl + "/42GameWebGL.jpg.unityweb') center / cover";
-  loadingBar.style.display = "block";
-  var script = document.createElement("script");
-  script.src = loaderUrl;
-  script.onload = () => {
-    createUnityInstance(canvas, config, (progress) => {
-      progressBarFull.style.width = 100 * progress + "%";
-    }).then((unityInstance) => {
-      loadingBar.style.display = "none";
-    }).catch((message) => {
-      alert(message);
-    });
-  };
+        canvas.style.width = "1280px";
+        canvas.style.height = "720px";
+      }
 
-  document.body.appendChild(script);
-</script>
+      canvas.style.background = "url('" + buildUrl + "/42GameWebGL.jpg.unityweb') center / cover";
+      loadingBar.style.display = "block";
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
   </body>
 </html>

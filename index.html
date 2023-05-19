@@ -56,11 +56,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/42 webgl.loader.js";
+      var loaderUrl = buildUrl + "/42webgl.loader.js";
       var config = {
-        dataUrl: buildUrl + "/42 webgl.data.br",
-        frameworkUrl: buildUrl + "/42 webgl.framework.js.br",
-        codeUrl: buildUrl + "/42 webgl.wasm.br",
+        dataUrl: buildUrl + "/42webgl.data.br",
+        frameworkUrl: buildUrl + "/42webgl.framework.js.br",
+        codeUrl: buildUrl + "/42webgl.wasm.br",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Jam42",
@@ -87,7 +87,7 @@
 
         // To lower canvas resolution on mobile devices to gain some
         // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+        config.devicePixelRatio = 1;
 
         unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
@@ -97,7 +97,7 @@
         canvas.style.height = "600px";
       }
 
-      canvas.style.background = "url('" + buildUrl + "/42 webgl.jpg.br') center / cover";
+      canvas.style.background = "url('" + buildUrl + "/42webgl.jpg.br') center / cover";
       loadingBar.style.display = "block";
 
       var script = document.createElement("script");

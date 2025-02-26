@@ -19,12 +19,44 @@
         overflow: hidden;
       }
 
+      /* Contenedor de botones a la izquierda */
+      #game-selector {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      }
+
+      .game-button {
+        background-color: #00bcd4;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        transition: background-color 0.3s;
+      }
+
+      .game-button:hover {
+        background-color: #007c8a;
+      }
+
       /* Contenedor del juego */
       #unity-container {
-        position: absolute;  /* Cambié relative por absolute */
-        top: 50%;            /* Centra verticalmente */
-        left: 50%;           /* Centra horizontalmente */
-        transform: translate(-50%, -50%); /* Ajusta la posición para que quede perfectamente centrado */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         max-width: 90%;
         max-height: 90%;
         border-radius: 15px;
@@ -172,6 +204,13 @@
     <!-- Fondo estético detrás del juego -->
     <div id="background-overlay"></div>
 
+    <!-- Contenedor de botones -->
+    <div id="game-selector">
+      <button class="game-button" onclick="loadGame('Game1')">Juego 1</button>
+      <button class="game-button" onclick="loadGame('Game2')">Juego 2</button>
+      <button class="game-button" onclick="loadGame('Game3')">Juego 3</button>
+    </div>
+
     <!-- Contenedor del juego -->
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width="1280" height="720"></canvas>
@@ -194,7 +233,7 @@
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
-      
+
       function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
           warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -213,42 +252,39 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/42GameWebGL.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/42GameWebGL.data.unityweb",
-        frameworkUrl: buildUrl + "/42GameWebGL.framework.js.unityweb",
-        codeUrl: buildUrl + "/42GameWebGL.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        matchWebGLToCanvasSize: false,
-        companyName: "DefaultCompany",
-        productName: "Jam42",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
+      function loadGame(gameName) {
+        // Aquí se configura la carga de diferentes juegos
+        var buildUrl = "Build/" + gameName;
+        var loaderUrl = buildUrl + "/" + gameName + ".loader.js";
+        var config = {
+          dataUrl: buildUrl + "/" + gameName + ".data.unityweb",
+          frameworkUrl: buildUrl + "/" + gameName + ".framework.js.unityweb",
+          codeUrl: buildUrl + "/" + gameName + ".wasm.unityweb",
+          streamingAssetsUrl: "StreamingAssets",
+          matchWebGLToCanvasSize: false,
+          companyName: "DefaultCompany",
+          productName: gameName,
+          productVersion: "1.0",
+          showBanner: unityShowBanner,
+        };
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        unityShowBanner('WebGL builds are not supported on mobile devices.');
-      } else {
-        canvas.style.width = "1280px";
-        canvas.style.height = "720px";
+        canvas.style.background = "url('" + buildUrl + "/" + gameName + ".jpg.unityweb') center / cover";
+        loadingBar.style.display = "block";
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+            progressBarFull.style.width = 100 * progress + "%";
+          }).then((unityInstance) => {
+            loadingBar.style.display = "none";
+          }).catch((message) => {
+            alert(message);
+          });
+        };
+
+        document.body.appendChild(script);
       }
-
-      canvas.style.background = "url('" + buildUrl + "/42GameWebGL.jpg.unityweb') center / cover";
-      loadingBar.style.display = "block";
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-
-      document.body.appendChild(script);
     </script>
   </body>
 </html>

@@ -21,21 +21,23 @@
 
       /* Contenedor del juego */
       #unity-container {
-        position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
-        background-color: #1a1a1a;
-        overflow: hidden;
-        padding: 20px;
-        background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
-        position: relative;
-        z-index: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+  position: absolute;  /* Cambié relative por absolute */
+  top: 50%;            /* Centra verticalmente */
+  left: 50%;           /* Centra horizontalmente */
+  transform: translate(-50%, -50%); /* Ajusta la posición para que quede perfectamente centrado */
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
+  background-color: #1a1a1a;
+  overflow: hidden;
+  padding: 20px;
+  background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
       /* Fondo estético detrás del juego */
       #background-overlay {

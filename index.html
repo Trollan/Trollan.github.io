@@ -31,13 +31,13 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 1280px;
+            max-width: 1280px; /* El máximo tamaño se mantiene en 1280px */
+            height: auto;
         }
 
         canvas {
-            width: 100%;
-            max-width: 1280px;
-            height: auto;
+            width: 1280px; /* Se establece el tamaño original del canvas */
+            height: 720px; /* Se establece el tamaño original del canvas */
             border: 2px solid #444;
             border-radius: 10px;
         }
@@ -82,10 +82,11 @@
             font-size: 14px;
         }
 
-        /* Responsividad */
+        /* Responsividad para pantallas pequeñas */
         @media (max-width: 768px) {
             canvas {
-                max-width: 100%;
+                width: 100%;
+                height: auto;
             }
             #unity-progress-bar-empty {
                 width: 80%;

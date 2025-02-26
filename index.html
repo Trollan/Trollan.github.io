@@ -17,17 +17,51 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        position: relative;
+      }
+
+      /* Contenedor principal */
+      #main-container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        justify-content: center;
+      }
+
+      /* Contenedor de la lista de juegos */
+      #games-list {
+        width: 180px; /* Ajustado para dejar más espacio para el juego */
+        background-color: #1a1a1a;
+        border-radius: 15px;
+        padding: 20px;
+        margin-right: 10px; /* Ajustado para centrar el contenido */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      #games-list button {
+        background-color: #00bcd4;
+        border: none;
+        color: white;
+        padding: 10px;
+        margin: 5px 0;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      #games-list button:hover {
+        background-color: #0097a7;
       }
 
       /* Contenedor del juego */
       #unity-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 80%; /* Reducido para dejar espacio para los botones */
-        max-height: 80%;
+        position: relative;
+        flex: 1;
+        max-width: 90%;
+        max-height: 90%;
         border-radius: 15px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
         background-color: #1a1a1a;
@@ -66,7 +100,7 @@
         }
       }
 
-      /* Barra de carga */
+      /* Barras de carga */
       #unity-loading-bar {
         position: absolute;
         top: 50%;
@@ -100,7 +134,7 @@
         100% { opacity: 1; }
       }
 
-      /* Mensajes de advertencia */
+      /* Mensajes de advertencia y error */
       #unity-warning {
         position: fixed;
         top: 10px;
@@ -114,6 +148,10 @@
         display: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         z-index: 999;
+      }
+
+      #unity-warning div {
+        margin-bottom: 5px;
       }
 
       /* Pie de página */
@@ -146,99 +184,81 @@
         font-size: 16px;
       }
 
-      /* Estilos para los botones */
-      #game-buttons {
-        position: absolute;
-        left: 10%;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        z-index: 2;
-        padding-left: 20px;
+      /* Animación del logo de Unity */
+      @keyframes loadingAnimation {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
       }
 
-      .game-button {
-        background-color: #1a1a1a;
-        color: #ffffff;
-        padding: 15px;
-        border-radius: 10px;
-        width: 200px;
-        text-align: center;
-        border: 2px solid #00bcd4;
-        font-size: 16px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .game-button img {
-        width: 24px;
-        height: 24px;
-      }
-
-      .game-button:hover {
-        background-color: #333;
+      #unity-logo {
+        margin: 0 auto;
+        animation: loadingAnimation 1.5s infinite ease-in-out;
       }
     </style>
   </head>
   <body>
-    <!-- Fondo estético detrás del juego -->
-    <div id="background-overlay"></div>
+    <!-- Contenedor principal -->
+    <div id="main-container">
+      <!-- Lista de juegos -->
+      <div id="games-list">
+        <button onclick="loadGame('Jam42')">Jam42</button>
+        <button onclick="loadGame('OtroJuego')">Otro Juego</button>
+        <!-- Añade más botones según tus juegos -->
+      </div>
 
-    <!-- Contenedor del juego -->
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width="1280" height="720"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+      <!-- Contenedor del juego -->
+      <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" width="1280" height="720"></canvas>
+        <div id="unity-loading-bar">
+          <div id="unity-logo"></div>
+          <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+          </div>
+        </div>
+        <div id="unity-warning"></div>
+        <div id="unity-footer">
+          <div id="unity-webgl-logo"></div>
+          <div id="unity-build-title">Jam42</div>
         </div>
       </div>
-      <div id="unity-warning"></div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-build-title">Jam42</div>
-      </div>
-    </div>
-
-    <!-- Lista de botones para elegir juego -->
-    <div id="game-buttons">
-      <button class="game-button" onclick="loadGame('game1')">
-        <img src="game1-icon.png" alt="Game 1"> Game 1
-      </button>
-      <button class="game-button" onclick="loadGame('game2')">
-        <img src="game2-icon.png" alt="Game 2"> Game 2
-      </button>
-      <button class="game-button" onclick="loadGame('game3')">
-        <img src="game3-icon.png" alt="Game 3"> Game 3
-      </button>
     </div>
 
     <script>
-      var currentGame = null;
+      var currentUnityInstance = null;
+
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
 
       function loadGame(gameName) {
-        // Detener el juego actual si está cargado
-        if (currentGame !== null) {
-          // Aquí puedes destruir el juego o liberar los recursos según sea necesario
-          console.log('Deteniendo el juego actual');
+        // Detener el juego actual si hay uno activo
+        if (currentUnityInstance) {
+          currentUnityInstance.Quit();
+          currentUnityInstance = null;
         }
 
-        // Cargar el nuevo juego
-        console.log('Cargando ' + gameName);
-
-        // Actualiza el contenedor del juego para que cargue el juego seleccionado
-        var container = document.querySelector("#unity-container");
-        var canvas = document.querySelector("#unity-canvas");
-        var loadingBar = document.querySelector("#unity-loading-bar");
-        var progressBarFull = document.querySelector("#unity-progress-bar-full");
-
-        // Carga el juego correspondiente (se asume que los juegos se encuentran en diferentes carpetas)
-        var buildUrl = gameName;  // Usa el nombre del juego para apuntar a la carpeta
+        var buildUrl = gameName === 'Jam42' ? "Build" : "OtroJuegoBuild"; // Ajusta las rutas de tus juegos
         var loaderUrl = buildUrl + "/42GameWebGL.loader.js";
         var config = {
           dataUrl: buildUrl + "/42GameWebGL.data.unityweb",
@@ -254,7 +274,6 @@
 
         canvas.style.background = "url('" + buildUrl + "/42GameWebGL.jpg.unityweb') center / cover";
         loadingBar.style.display = "block";
-
         var script = document.createElement("script");
         script.src = loaderUrl;
         script.onload = () => {
@@ -262,7 +281,7 @@
             progressBarFull.style.width = 100 * progress + "%";
           }).then((unityInstance) => {
             loadingBar.style.display = "none";
-            currentGame = gameName; // Actualiza el juego actual
+            currentUnityInstance = unityInstance;
           }).catch((message) => {
             alert(message);
           });
@@ -271,8 +290,10 @@
         document.body.appendChild(script);
       }
 
-      // Carga el primer juego por defecto al cargar la página
-      loadGame('game1');
+      // Cargar el juego por defecto al cargar la página
+      window.onload = function() {
+        loadGame('Jam42');
+      }
     </script>
   </body>
 </html>

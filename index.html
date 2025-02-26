@@ -223,8 +223,33 @@
           <img src="https://img.itch.zone/aW1nLzEwMTMwMDQ3LnBuZw==/315x250%23c/XC6odN.png" alt="Jam42">
           Jam42
         </button>
-        <button onclick="loadGame('OtroJuego')">Otro Juego</button>
-        <!-- Añade más botones según tus juegos -->
+
+        <!-- Botones en desarrollo -->
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <button>
+          <img src="https://img.icons8.com/ios/452/gear.png" alt="Developing">
+          Developing
+        </button>
+        <!-- Añadir más botones según sea necesario -->
       </div>
 
       <!-- Contenedor del juego -->
@@ -286,36 +311,19 @@
       frameworkUrl: buildUrl + "/42GameWebGL.framework.js.unityweb",
       codeUrl: buildUrl + "/42GameWebGL.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
-      matchWebGLToCanvasSize: false,
-      companyName: "DefaultCompany",
-      productName: gameName,
-      productVersion: "1.0",
-      showBanner: unityShowBanner,
+      matchWebGLToCanvasSize: true,
+      unityVersion: "2021.3.4f1",
     };
-
-    canvas.style.background = "url('" + buildUrl + "/42GameWebGL.jpg.unityweb') center / cover";
-    loadingBar.style.display = "block";
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstanceObj) => {
-        unityInstance = unityInstanceObj; // Guarda la nueva instancia del juego
-        loadingBar.style.display = "none";
-      }).catch((message) => {
-        alert(message);
-      });
-    };
-
-    document.body.appendChild(script);
+    
+    loadingBar.style.display = 'block';
+    UnityLoader.instantiate("unity-canvas", loaderUrl, config).then(function (instance) {
+      unityInstance = instance;
+      loadingBar.style.display = 'none'; // Ocultar barra de carga una vez que el juego se cargue
+    }).catch(function(error) {
+      console.error("Error al cargar el juego:", error);
+      unityShowBanner("No se pudo cargar el juego", "error");
+    });
   }
-
-  // Cargar el juego por defecto al cargar la página
-  window.onload = function() {
-    loadGame('Jam42');
-  }
-</script>
-
-  </body>
+  </script>
+</body>
 </html>

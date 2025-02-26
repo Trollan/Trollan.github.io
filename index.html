@@ -21,23 +21,23 @@
 
       /* Contenedor del juego */
       #unity-container {
-  position: absolute;  /* Cambié relative por absolute */
-  top: 50%;            /* Centra verticalmente */
-  left: 50%;           /* Centra horizontalmente */
-  transform: translate(-50%, -50%); /* Ajusta la posición para que quede perfectamente centrado */
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
-  background-color: #1a1a1a;
-  overflow: hidden;
-  padding: 20px;
-  background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+        position: absolute;  /* Cambié relative por absolute */
+        top: 50%;            /* Centra verticalmente */
+        left: 50%;           /* Centra horizontalmente */
+        transform: translate(-50%, -50%); /* Ajusta la posición para que quede perfectamente centrado */
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
+        background-color: #1a1a1a;
+        overflow: hidden;
+        padding: 20px;
+        background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
       /* Fondo estético detrás del juego */
       #background-overlay {
@@ -174,14 +174,14 @@
 
     <!-- Contenedor del juego -->
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1280 height=720></canvas>
+      <canvas id="unity-canvas" width="1280" height="720"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
         </div>
       </div>
-      <div id="unity-warning"> </div>
+      <div id="unity-warning"></div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-build-title">Jam42</div>

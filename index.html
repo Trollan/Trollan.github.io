@@ -277,54 +277,75 @@
     }
   }
 
-  function startNewGame(gameName) {
-    var buildUrl, filePrefix;
-    if (gameName === 'Jam42') {
-      buildUrl = "Build";
-      filePrefix = "42GameWebGL";
-    } else if (gameName === 'SiDiosQuiere') {
-      buildUrl = "Build2";
-      filePrefix = "SiDiosQuiereWeb";
-    } else {
-      buildUrl = "OtroJuegoBuild";
-      filePrefix = "OtroJuego";
-    }
+  function loadGame(gameName) {
+  // 🔹 Mostrar pantalla de carga
+  loadingBar.style.display = "block";
 
-    var loaderUrl = `${buildUrl}/${filePrefix}.loader.js`;
-    var config = {
-      dataUrl: `${buildUrl}/${filePrefix}.data${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
-      frameworkUrl: `${buildUrl}/${filePrefix}.framework.js${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
-      codeUrl: `${buildUrl}/${filePrefix}.wasm${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "DefaultCompany",
-      productName: gameName === "SiDiosQuiere" ? "SiDiosQuiereGameJam" : gameName,
-      productVersion: "1.0",
-      showBanner: unityShowBanner,
-    };
+  // 🔹 Deshabilitar botones
+  let buttons = document.querySelectorAll("#games-list button");
+  buttons.forEach(button => button.disabled = true);
 
-    canvas.style.background = `url('${buildUrl}/${filePrefix}.jpg${gameName === "SiDiosQuiere" ? "" : ".unityweb"}') center / cover`;
-
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstanceObj) => {
-        unityInstance = unityInstanceObj;
-        loadingBar.style.display = "none";
-        loadingScreen.style.display = "none"; // Ocultar pantalla de carga
-        disableButtons(false); // Rehabilitar botones
-      }).catch((message) => {
-        alert("Error cargando Unity: " + message);
-        loadingScreen.style.display = "none"; // Ocultar pantalla de carga en caso de error
-        disableButtons(false); // Rehabilitar botones
-      });
-    };
-    document.body.appendChild(script);
+  if (unityInstance) {
+    unityInstance.Quit().then(() => {
+      console.log("Juego anterior detenido.");
+    }).catch((e) => {
+      console.error("Error al detener el juego anterior:", e);
+    });
   }
 
-  window.onload = function() {
-    loadGame('Jam42');
+  var buildUrl, filePrefix;
+  if (gameName === 'Jam42') {
+    buildUrl = "Build";
+    filePrefix = "42GameWebGL";
+  } else if (gameName === 'SiDiosQuiere') {
+    buildUrl = "Build2";
+    filePrefix = "SiDiosQuiereWeb";
+  } else {
+    buildUrl = "OtroJuegoBuild";
+    filePrefix = "OtroJuego";
   }
-</script>
+
+  var loaderUrl = `${buildUrl}/${filePrefix}.loader.js`;
+
+  var config = {
+    dataUrl: `${buildUrl}/${filePrefix}.data${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
+    frameworkUrl: `${buildUrl}/${filePrefix}.framework.js${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
+    codeUrl: `${buildUrl}/${filePrefix}.wasm${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "DefaultCompany",
+    productName: gameName === "SiDiosQuiere" ? "SiDiosQuiereGameJam" : gameName,
+    productVersion: "1.0",
+    showBanner: unityShowBanner,
+  };
+
+  canvas.style.background = `url('${buildUrl}/${filePrefix}.jpg${gameName === "SiDiosQuiere" ? "" : ".unityweb"}') center / cover`;
+
+  var script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = () => {
+    createUnityInstance(canvas, config, (progress) => {
+      progressBarFull.style.width = 100 * progress + "%";
+    }).then((unityInstanceObj) => {
+      unityInstance = unityInstanceObj;
+
+      // 🔹 Ocultar pantalla de carga cuando termine
+      loadingBar.style.display = "none";
+
+      // 🔹 Habilitar botones
+      buttons.forEach(button => button.disabled = false);
+
+    }).catch((message) => {
+      alert("Error cargando Unity: " + message);
+      loadingBar.style.display = "none";
+      buttons.forEach(button => button.disabled = false);
+    });
+  };
+  document.body.appendChild(script);
+}
+
+// 🔹 Cargar el primer juego automáticamente
+window.onload = function() {
+  loadGame('Jam42');
+};
+
 

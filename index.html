@@ -327,9 +327,9 @@ var loaderUrl = `${buildUrl}/${filePrefix}.loader.js`;
 
 // 🔹 Configuración de archivos (sin .unityweb en SiDiosQuiere)
 var config = {
-  dataUrl: `${buildUrl}/${filePrefix}.data${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
-  frameworkUrl: `${buildUrl}/${filePrefix}.framework.js${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
-  codeUrl: `${buildUrl}/${filePrefix}.wasm${gameName === "SiDiosQuiere" ? "" : ".unityweb"}`,
+  dataUrl: `${buildUrl}/${filePrefix}.data${gameName === "Jam42" ? ".unityweb" : ""}`,
+  frameworkUrl: `${buildUrl}/${filePrefix}.framework.js${gameName === "Jam42" ? ".unityweb" : ""}`,
+  codeUrl: `${buildUrl}/${filePrefix}.wasm${gameName === "Jam42" ? ".unityweb" : ""}`,
   streamingAssetsUrl: "StreamingAssets",
   companyName: "DefaultCompany",
   productName: gameName === "SiDiosQuiere" ? "SiDiosQuiereGameJam" : gameName,

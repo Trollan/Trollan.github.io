@@ -232,7 +232,14 @@
 
   </head>
 <body>
-
+<!-- Contenedor de carga -->
+<div id="loading-screen" style="
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8); color: white; 
+  display: none; align-items: center; justify-content: center;
+  font-size: 24px; z-index: 1000;">
+  Cargando nuevo juego...
+</div>
 
 <script>
   var container = document.querySelector("#unity-container");
@@ -320,5 +327,3 @@
     loadGame('Jam42');
   }
 </script>
-
-

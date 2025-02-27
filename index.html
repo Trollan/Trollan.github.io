@@ -310,48 +310,50 @@
         });
       }
 
-      var buildUrl, filePrefix;
-      if (gameName === 'Jam42') {
-        buildUrl = "Build";
-        filePrefix = "42GameWebGL";
-      } else if (gameName === 'SiDiosQuiere') {
-        buildUrl = "Build2";
-        filePrefix = "SiDiosQuiereWeb";
-      } else {
-        buildUrl = "OtroJuegoBuild";
-        filePrefix = "OtroJuego";
-      }
+      var buildUrl, filePrefix, useUnityWeb;
+if (gameName === 'Jam42') {
+  buildUrl = "Build";
+  filePrefix = "42GameWebGL";
+  useUnityWeb = true;
+} else if (gameName === 'SiDiosQuiere') {
+  buildUrl = "Build2";
+  filePrefix = "SiDiosQuiereWeb";
+  useUnityWeb = false; // Este juego usa archivos sin .unityweb
+} else {
+  buildUrl = "OtroJuegoBuild";
+  filePrefix = "OtroJuego";
+  useUnityWeb = true;
+}
 
-      var loaderUrl = buildUrl + "/" + filePrefix + ".loader.js";
-      var config = {
-        dataUrl: buildUrl + "/" + filePrefix + ".data.unityweb",
-        frameworkUrl: buildUrl + "/" + filePrefix + ".framework.js.unityweb",
-        codeUrl: buildUrl + "/" + filePrefix + ".wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        matchWebGLToCanvasSize: false,
-        companyName: "DefaultCompany",
-        productName: gameName,
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
+var loaderUrl = buildUrl + "/" + filePrefix + ".loader.js";
+var config = {
+  dataUrl: buildUrl + "/" + filePrefix + (useUnityWeb ? ".data.unityweb" : ".data"),
+  frameworkUrl: buildUrl + "/" + filePrefix + (useUnityWeb ? ".framework.js.unityweb" : ".framework.js"),
+  codeUrl: buildUrl + "/" + filePrefix + (useUnityWeb ? ".wasm.unityweb" : ".wasm"),
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "DefaultCompany",
+  productName: gameName === "SiDiosQuiere" ? "SiDiosQuiereGameJam" : gameName,
+  productVersion: "1.0",
+  showBanner: unityShowBanner,
+};
 
-      canvas.style.background = "url('" + buildUrl + "/" + filePrefix + ".jpg.unityweb') center / cover";
-      loadingBar.style.display = "block";
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstanceObj) => {
-          unityInstance = unityInstanceObj;
-          loadingBar.style.display = "none";
-        }).catch((message) => {
-          alert(message);
-        });
-      };
+// Ajustar la imagen de fondo
+canvas.style.background = "url('" + buildUrl + "/" + filePrefix + ".jpg" + (useUnityWeb ? ".unityweb" : "") + "') center / cover";
 
-      document.body.appendChild(script);
-    }
+// Cargar el script del loader
+var script = document.createElement("script");
+script.src = loaderUrl;
+script.onload = () => {
+  createUnityInstance(canvas, config, (progress) => {
+    progressBarFull.style.width = 100 * progress + "%";
+  }).then((unityInstanceObj) => {
+    unityInstance = unityInstanceObj;
+    loadingBar.style.display = "none";
+  }).catch((message) => {
+    alert(message);
+  });
+};
+document.body.appendChild(script);
 
     window.onload = function() {
       loadGame('Jam42');

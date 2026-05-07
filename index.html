@@ -1,422 +1,537 @@
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Games Page</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <style>
-  /* Fondo de la página y centro del contenido */
-  body {
-    background: linear-gradient(135deg, #0a0a0a, #2a2a2a);
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
+<!DOCTYPE html>
+<html lang="es">
 
-  /* Contenedor principal */
-  #main-container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-  }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel Sánchez Villalba | Software Developer & XR Specialist</title>
+    <meta name="description"
+        content="Portfolio profesional de Manuel Sánchez Villalba, desarrollador Unity y especialista XR enfocado en simulaciones industriales y sistemas de juego.">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
 
-  /* Contenedor de la lista de juegos */
-  #games-list {
-    position: absolute;
-    left: 20px; /* Fijar el menú a la izquierda */
-    top: 50%;
-    transform: translateY(-50%);
-
-    width: 200px;
-    background-color: #1a1a1a;
-    border-radius: 15px;
-    padding: 20px;
-    margin-right: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #games-list button {
-    background-color: #555555;  /* Color gris */
-    border: none;
-    color: white;
-    padding: 10px;
-    margin: 5px 0;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    position: relative;
-    display: flex;
-    flex-direction: column;  /* Alinea el texto debajo de la imagen */
-    align-items: center;
-  }
-
-  #games-list button:hover {
-    background-color: #888888;  /* Color gris más claro al hacer hover */
-  }
-
-  /* Imagen dentro del botón */
-  #games-list button img {
-    width: 100%;
-    height: auto;
-    max-width: 100px;  /* Ajusta el tamaño máximo de la imagen */
-    max-height: 100px; /* Ajusta el tamaño máximo de la imagen */
-    object-fit: contain;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-
-  /* Contenedor del juego */
-  #unity-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: auto;
-    height: auto;
-    flex: 1;
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6);
-    background-color: #1a1a1a;
-    overflow: hidden;
-    padding: 20px;
-    background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* Fondo estético detrás del juego */
-  #background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.7), rgba(50, 50, 50, 0.7));
-    z-index: -1;
-    border-radius: 15px;
-    animation: backgroundAnimation 5s infinite ease-in-out;
-  }
-
-  /* Animación para el fondo detrás del juego */
-  @keyframes backgroundAnimation {
-    0% {
-      background-position: 0% 0%;
-    }
-    50% {
-      background-position: 100% 100%;
-    }
-    100% {
-      background-position: 0% 0%;
-    }
-  }
-
-  /* Barras de carga */
-  #unity-loading-bar {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 300px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
-  }
-
-  #unity-progress-bar-empty {
-    background-color: #333;
-    border-radius: 5px;
-    width: 100%;
-    height: 10px;
-    margin-top: 10px;
-  }
-
-  #unity-progress-bar-full {
-    background-color: #00bcd4;
-    width: 0%;
-    height: 100%;
-    border-radius: 5px;
-    transition: width 0.3s ease;
-  }
-
-  /* Animación de carga */
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-
-  /* Mensajes de advertencia y error */
-  #unity-warning {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffdd00;
-    color: #1a1a1a;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 5px;
-    display: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-    z-index: 999;
-  }
-
-  #unity-warning div {
-    margin-bottom: 5px;
-  }
-
-  /* Pie de página */
-  #unity-footer {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #ffffff;
-    padding: 10px 20px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-    border-top: 2px solid #00bcd4;
-  }
-
-  #unity-webgl-logo {
-    width: 30px;
-    height: 30px;
-    background-image: url('TemplateData/logo-webgl.png');
-    background-size: cover;
-  }
-
-  #unity-build-title {
-    font-weight: bold;
-    font-size: 16px;
-  }
-
-  /* Animación del logo de Unity */
-  @keyframes loadingAnimation {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  #unity-logo {
-    margin: 0 auto;
-    animation: loadingAnimation 1.5s infinite ease-in-out;
-  }
-  #social-buttons {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .social-btn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-    background-color: #333;
-    border-radius: 50%;
-    transition: background 0.3s ease;
-  }
-
-  .twitter:hover { background-color: #1DA1F2; }
-  .github:hover { background-color: #171515; }
-  .linkedin:hover { background-color: #0077B5; }
-  .itchio:hover { background-color: #fa5c5c; }
-</style>
-
-  </head>
 <body>
-  <!-- Contenedor principal -->
-  <div id="main-container">
-    <!-- Lista de juegos -->
-    <div id="games-list">
-      <button onclick="loadGame('Jam42')">
-        <img src="https://img.itch.zone/aW1nLzEwMTMwMDQ3LnBuZw==/315x250%23c/XC6odN.png" alt="Jam42">
-        FastPiscine
-      </button>
-      <button onclick="loadGame('SiDiosQuiere')">
-        <img src="https://img.itch.zone/aW1nLzEyOTY1OTYyLnBuZw==/original/p2WMZI.png" alt="SiDiosQuiere">
-        SiDiosQuiere
-      </button>
-      <button onclick="loadGame('JuniorPiscine')">
-        <img src="https://i.imgur.com/nDOjxol.jpeg" alt="JuniorPiscine">
-        JuniorPiscine
-      </button>
+    <div id="perf-monitor">
+        <div>FPS: <span id="fps-val" class="perf-val">--</span></div>
+        <div>NODES: <span id="node-val" class="perf-val">--</span></div>
     </div>
-    <div id="social-buttons">
-    <a href="https://x.com/TrollanTSB" target="_blank" class="social-btn twitter">T</a>
-    <a href="https://github.com/Trollan" target="_blank" class="social-btn github">G</a>
-    <a href="https://www.linkedin.com/in/manuel-sánchez-villalba-340aab220/" target="_blank" class="social-btn linkedin">L</a>
-    <a href="https://trollantsb.itch.io" target="_blank" class="social-btn itchio">I</a>
-    </div>
+    <div id="achievement-container" class="achievement-container"></div>
+    <canvas id="matrix-canvas"></canvas>
 
-    <!-- Contenedor del juego -->
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width="1280" height="720"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+    <!-- Achievements Panel -->
+    <div id="achievements-modal" class="achievements-modal">
+        <div class="achievements-content">
+            <button id="achievements-close" class="close-btn">&times;</button>
+            <h2 data-i18n="ach_panel_title">Trophy Room</h2>
+            <div id="achievements-list" class="achievements-grid">
+                <!-- Achievement items generated by JS -->
+            </div>
         </div>
-      </div>
-      <div id="unity-warning"></div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-build-title">Trollan Games</div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    var container = document.querySelector("#unity-container");
-    var canvas = document.querySelector("#unity-canvas");
-    var loadingBar = document.querySelector("#unity-loading-bar");
-    var progressBarFull = document.querySelector("#unity-progress-bar-full");
-    var warningBanner = document.querySelector("#unity-warning");
-    var unityInstance = null;
+    <div class="custom-cursor"></div>
+    <canvas id="bg-canvas"></canvas>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
 
-    function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      var div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type == 'error') div.style = 'background: red; padding: 10px;';
-      else {
-        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-        setTimeout(function() {
-          warningBanner.removeChild(div);
-          updateBannerVisibility();
-        }, 5000);
-      }
-      updateBannerVisibility();
-    }
+    <nav id="navbar">
+        <div class="container nav-container">
+            <div class="logo">MSV</div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="nav-links" id="nav-links">
+                <a href="#home" class="nav-link active" data-i18n="nav_home">Inicio</a>
+                <a href="#about" class="nav-link" data-i18n="nav_about">Perfil</a>
+                <a href="#experience" class="nav-link" data-i18n="nav_experience">Experiencia</a>
+                <a href="#skills" class="nav-link" data-i18n="nav_skills">Stack</a>
+                <a href="#portfolio" class="nav-link" data-i18n="nav_portfolio">Proyectos</a>
+                <a href="#contact" class="nav-link" data-i18n="nav_contact">Contacto</a>
 
-    function loadGame(gameName) {
-  // Bloquear todos los botones
-    let buttons = document.querySelectorAll("#games-list button");
-    buttons.forEach(button => button.disabled = true);
-    
-    // Crear y mostrar la pantalla de carga
-    let loadingScreen = document.createElement("div");
-    loadingScreen.id = "loading-screen";
-    loadingScreen.style.position = "fixed";
-    loadingScreen.style.top = "0";
-    loadingScreen.style.left = "0";
-    loadingScreen.style.width = "100%";
-    loadingScreen.style.height = "100%";
-    loadingScreen.style.background = "rgba(0, 0, 0, 0.8)";
-    loadingScreen.style.display = "flex";
-    loadingScreen.style.justifyContent = "center";
-    loadingScreen.style.alignItems = "center";
-    loadingScreen.style.color = "white";
-    loadingScreen.style.fontSize = "24px";
-    loadingScreen.innerHTML = "Cargando juego...";
-    document.body.appendChild(loadingScreen);
-    
-    // Esperar 8 segundos y luego quitar la pantalla de carga y desbloquear botones
-    setTimeout(() => {
-      document.body.removeChild(loadingScreen);
-      buttons.forEach(button => button.disabled = false);
-      
-      // Aquí puedes iniciar la carga real del juego
-      console.log("Juego cargado: " + gameName);
-    }, 8000);
+                <div class="controls">
+                    <button id="lang-toggle" class="control-btn" title="Cambiar Idioma">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-      
-      if (unityInstance) {
-        unityInstance.Quit().then(() => {
-          console.log("Juego anterior detenido.");
-        }).catch((e) => {
-          console.error("Error al detener el juego anterior:", e);
-        });
-      }
+    <div class="container">
+        <header id="home">
+            <div class="hero-grid">
+                <div class="hero-text">
+                    <h1><span data-i18n="hero_title">Manuel Sánchez</span> <span class="accent-text"
+                            data-i18n="hero_subtitle">Desarrollador Unity & Especialista XR</span></h1>
+                    <p data-i18n="hero_description">Desarrollador de Software especializado en simulaciones industriales
+                        de
+                        alta fidelidad y tecnologías inmersivas. Experto en el ecosistema Unity y flujos de trabajo XR,
+                        dedicado a la arquitectura de sistemas escalables y experiencias interactivas de alto
+                        rendimiento.</p>
+                    <div class="social-links" style="display: flex; gap: 1.5rem;">
+                        <a href="https://www.linkedin.com/in/manuel-s%C3%A1nchez-villalba-340aab220/" target="_blank"
+                            class="social-btn" style="color: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                        <a href="https://github.com/Trollan" target="_blank" class="social-btn" style="color: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="https://trollantsb.itch.io" target="_blank" class="social-btn" style="color: white;"
+                            title="itch.io">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-frame">
+                        <img src="profile.png" alt="Manuel Sánchez Villalba">
+                    </div>
+                </div>
+            </div>
+        </header>
 
-var buildUrl, filePrefix;
-if (gameName === 'Jam42') {
-  buildUrl = "Build";
-  filePrefix = "42GameWebGL";
-} else if (gameName === 'SiDiosQuiere') {
-  buildUrl = "Build2";
-  filePrefix = "SiDiosQuiereWeb";
-} else if (gameName === 'JuniorPiscine'){
-  buildUrl = "Build3";
-  filePrefix = "JuniorPiscineWeb";
-}
+        <section id="about" class="reveal">
+            <div class="card">
+                <h2 class="section-title" data-i18n="about_title">Perfil Profesional</h2>
+                <p style="font-size: 1.1rem; color: var(--text-secondary);" data-i18n="about_description">Desarrollador
+                    de
+                    Software especializado en el ecosistema Unity y tecnologías XR (VR/AR). Mi enfoque combina una base
+                    técnica rigurosa forjada en 42 Málaga, centrada en sistemas de bajo nivel en C y C++, con la visión
+                    creativa de mis estudios de Máster. Actualmente, mi trabajo se centra en el desarrollo de
+                    simulaciones profesionales y herramientas interactivas, priorizando la eficiencia algorítmica y la
+                    ejecución técnica de alto rendimiento.</p>
+            </div>
+        </section>
 
-// 🔹 Carga del loader.js
-var loaderUrl = `${buildUrl}/${filePrefix}.loader.js`;
+        <section id="experience" class="reveal">
+            <h2 class="section-title" data-i18n="exp_title">Trayectoria Profesional</h2>
+            <div class="timeline">
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_1_date">2025 — Hoy</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_1_title">Desarrollador Unity</h3>
+                        <span class="exp-company">Visual Safety</span>
+                        <p data-i18n="exp_1_description">Arquitectura de simulaciones industriales y soluciones de
+                            entrenamiento XR. Implementación de sistemas técnicos complejos para entornos críticos de
+                            seguridad y experiencias interactivas de realidad virtual.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_2_date">2024 — 2024</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_2_title">Instructor Técnico</h3>
+                        <span class="exp-company">Algorithmics España (Mayo - Sep)</span>
+                        <p data-i18n="exp_2_description">Impartición de talleres técnicos avanzados y mentoría
+                            profesional en lógica de programación, arquitectura de software y diseño de sistemas.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_3_date">2023 — 2024</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_3_title">Profesor de Programación (Remoto)</h3>
+                        <span class="exp-company">Coding Giants (Nov - Mayo)</span>
+                        <p data-i18n="exp_3_description">Enseñanza de algoritmos complejos y principios de ingeniería de
+                            software en entornos distribuidos para una base de estudiantes internacional.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_4_date">2022 — 2022</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_4_title">Desarrollador & Diseñador</h3>
+                        <span class="exp-company">Three Golden Monkeys (Ene - Abr)</span>
+                        <p data-i18n="exp_4_description">Ingeniería de la arquitectura técnica y sistemas de juego para
+                            el prototipo 'Zombie Strike', optimizando mecánicas de combate y ciclos de juego
+                            principales.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_5_date">2020 — 2020</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_5_title">Ingeniero QA & Programador</h3>
+                        <span class="exp-company">Mindiff (Abr - Jun)</span>
+                        <p data-i18n="exp_5_description">Ejecución de QA técnico de alto nivel y remediación de errores
+                            para el título AAA 'The Immortal Mystic', garantizando estabilidad de rendimiento en
+                            versiones de producción.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="exp_6_date">2019 — 2019</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="exp_6_title">Beta Tester Técnico</h3>
+                        <span class="exp-company">Kaiju Games (Feb - Mar)</span>
+                        <p data-i18n="exp_6_description">Realización de pruebas sistemáticas para el proyecto
+                            'EduZland', enfocándome en la estabilidad de la experiencia de usuario y validación técnica
+                            de rendimiento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-// 🔹 Configuración de archivos (sin .unityweb en SiDiosQuiere)
-var config = {
-  dataUrl: `${buildUrl}/${filePrefix}.data${gameName === "Jam42" ? ".unityweb" : ""}`,
-  frameworkUrl: `${buildUrl}/${filePrefix}.framework.js${gameName === "Jam42" ? ".unityweb" : ""}`,
-  codeUrl: `${buildUrl}/${filePrefix}.wasm${gameName === "Jam42" ? ".unityweb" : ""}`,
-  streamingAssetsUrl: "StreamingAssets",
-  companyName: "DefaultCompany",
-  productName: gameName === "SiDiosQuiere" ? "SiDiosQuiereGameJam" : gameName,
-  productVersion: "1.0",
-  showBanner: unityShowBanner,
-};
+        <section id="skills" class="reveal">
+            <h2 class="section-title" data-i18n="skills_title">Stack Técnico</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3 data-i18n="skills_cat_1">Motores & XR</h3>
+                    <div class="skill-list">
+                        <span class="skill-pill">Unity 3D (Expert)</span>
+                        <span class="skill-pill">Unreal Engine 5</span>
+                        <span class="skill-pill">VR / AR / MR</span>
+                        <span class="skill-pill">AR Foundation</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3 data-i18n="skills_cat_2">Lenguajes & Sistemas</h3>
+                    <div class="skill-list">
+                        <span class="skill-pill">C# / C++ / C</span>
+                        <span class="skill-pill">Python / Lua</span>
+                        <span class="skill-pill">TypeScript / Node.js</span>
+                        <span class="skill-pill">SQL / MongoDB</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3 data-i18n="skills_cat_3">Pipeline & Production</h3>
+                    <div class="skill-list">
+                        <span class="skill-pill">Git / Plastic SCM</span>
+                        <span class="skill-pill">Docker / CI-CD</span>
+                        <span class="skill-pill">Blender / 3ds Max</span>
+                        <span class="skill-pill">Adobe Suite</span>
+                        <span class="skill-pill">Agile / Jira</span>
+                    </div>
+                </div>
+            </div>
+            <div class="radar-dashboard reveal">
+                <div class="radar-container">
+                    <canvas id="tech-radar"></canvas>
+                </div>
+                <div class="radar-info">
+                    <div class="info-item">
+                        <div class="info-label">ENGINES & REALTIME</div>
+                        <div class="info-bar">
+                            <div class="info-fill" style="width: 95%;"></div>
+                        </div>
+                        <p>Especialista en Unity (C#) y Unreal (C++). Optimización de draw calls y sistemas de físicas.
+                        </p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">XR TECHNOLOGIES</div>
+                        <div class="info-bar">
+                            <div class="info-fill" style="width: 90%;"></div>
+                        </div>
+                        <p>Desarrollo para Meta Quest, HoloLens y SteamVR. Implementación de AR Foundation.</p>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">SYSTEM ARCHITECTURE</div>
+                        <div class="info-bar">
+                            <div class="info-fill" style="width: 85%;"></div>
+                        </div>
+                        <p>Patrones de diseño avanzados, gestión de memoria y arquitectura de sistemas escalables.</p>
+                    </div>
+                </div>
+                <div class="dashboard-metadata">
+                    <span>SYS_STATE: OPTIMAL</span>
+                    <span>DATA_STREAM: ACTIVE</span>
+                </div>
+            </div>
+        </section>
 
-// 🔹 Imagen de fondo
-canvas.style.background = `url('${buildUrl}/${filePrefix}.jpg${gameName === "SiDiosQuiere" ? "" : ".unityweb"}') center / cover`;
+        <section id="portfolio" class="reveal">
+            <h2 class="section-title" data-i18n="projects_title">Proyectos Seleccionados</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <img src="project1.png" alt="Night Awakes">
+                    <div class="project-overlay">
+                        <h3>Night Awakes (TFM)</h3>
+                        <p data-i18n="project_1_desc">RPG de acción desarrollado como Tesis de Máster. Ingeniería de
+                            sistemas integrales de movimiento, combate e inventario utilizando patrones estándar de la
+                            industria.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="project2.png" alt="Virtual War">
+                    <div class="project-overlay">
+                        <h3 data-i18n="project_2_title">Virtual War</h3>
+                        <p data-i18n="project_2_desc">Shooter táctico con sistemas avanzados de IA. Implementación de
+                            comportamientos de enjambre y optimización de redes multijugador.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="project3.png" alt="Soul Shatter">
+                    <div class="project-overlay">
+                        <h3 data-i18n="project_3_title">Soul Shatter</h3>
+                        <p data-i18n="project_3_desc">Experiencia de terror cooperativo. Diseño de eventos sistémicos y
+                            renderizado atmosférico mediante shaders personalizados.</p>
+                    </div>
+                </div>
+            </div>
 
-// 🔹 Carga del script Unity
-var script = document.createElement("script");
-script.src = loaderUrl;
-script.onload = () => {
-  createUnityInstance(canvas, config, (progress) => {
-    progressBarFull.style.width = 100 * progress + "%";
-  }).then((unityInstanceObj) => {
-    unityInstance = unityInstanceObj;
-    loadingBar.style.display = "none";
-  }).catch((message) => {
-    alert("Error cargando Unity: " + message);
-  });
-};
-document.body.appendChild(script);
-    }
+            <!-- WebAR Model Viewer Section -->
+            <div class="card reveal" style="margin-top: 3rem; text-align: center;">
+                <h3 style="margin-bottom: 1.5rem;" data-i18n="ar_model_title">Interactúa con mis Diseños (3D/AR)</h3>
+                <div
+                    style="width: 100%; height: 400px; background: rgba(255,255,255,0.05); border-radius: 1rem; overflow: hidden; border: 1px solid var(--border); position: relative;">
+                    <div class="render-modes">
+                        <button class="mode-btn active" data-mode="standard">STD</button>
+                        <button class="mode-btn" data-mode="wireframe">WIR</button>
+                        <button class="mode-btn" data-mode="hologram">HOL</button>
+                    </div>
+                    <model-viewer id="gamepad-model" src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" ar
+                        camera-controls auto-rotate shadow-intensity="1" style="width: 100%; height: 100%;">
+                        <button slot="ar-button"
+                            style="background-color: var(--accent); border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px; padding: 10px; color: white;">
+                            👋 Ver en AR
+                        </button>
+                    </model-viewer>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);" data-i18n="ar_model_desc">
+                    Usa tu ratón para rotar el modelo. En móviles, pulsa el botón para proyectarlo en tu habitación.</p>
+            </div>
+        </section>
 
+        <section id="education" class="reveal">
+            <h2 class="section-title" data-i18n="edu_title">Formación Académica</h2>
+            <div class="timeline">
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="edu_1_date">2022 — Hoy</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="edu_1_title">Estudiante de Programación</h3>
+                        <span class="exp-company">42 Málaga Fundación Telefónica</span>
+                        <p data-i18n="edu_1_description">Currículo intensivo basado en proyectos con enfoque en
+                            ingeniería de sistemas de bajo nivel, complejidad algorítmica y gestión de memoria en C/C++.
+                        </p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="edu_2_date">2020 — 2022</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="edu_2_title">Máster en Desarrollo de Videojuegos</h3>
+                        <span class="exp-company">EVAD</span>
+                        <p data-i18n="edu_2_description">Especialización avanzada en arquitectura de motores, diseño
+                            técnico de juegos e ingeniería de software sistémica.</p>
+                    </div>
+                </div>
+                <div class="card experience-item">
+                    <div class="exp-date" data-i18n="edu_3_date">2018 — 2020</div>
+                    <div class="exp-content">
+                        <h3 data-i18n="edu_3_title">Grado Superior en Creación y Diseño</h3>
+                        <span class="exp-company">EVAD</span>
+                        <p data-i18n="edu_3_description">Fundamentos de diseño interactivo, arte técnico y programación
+                            aplicada a entornos digitales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    window.onload = function() {
-      loadGame('Jam42');
-    }
-  </script>
+        <section id="arcade" class="reveal" style="margin-top: 6rem;">
+            <h2 class="section-title" data-i18n="arcade_title">Arcade Terminal</h2>
+            <div class="arcade-grid">
+                <!-- Puzzle Game -->
+                <div class="card arcade-card">
+                    <h3 data-i18n="arcade_puzzle_title">🧩 Fix the Code (Puzzle)</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;"
+                        data-i18n="arcade_puzzle_desc">Ordena las piezas para estabilizar el sistema.</p>
+                    <div id="puzzle-board" class="puzzle-board">
+                        <div class="puzzle-piece" id="p1"
+                            style="background-image: url('https://picsum.photos/id/1/200/200'); background-position: 0 0;">
+                        </div>
+                        <div class="puzzle-piece" id="p2"
+                            style="background-image: url('https://picsum.photos/id/1/200/200'); background-position: 100% 0;">
+                        </div>
+                        <div class="puzzle-piece" id="p3"
+                            style="background-image: url('https://picsum.photos/id/1/200/200'); background-position: 0 100%;">
+                        </div>
+                        <div class="puzzle-piece" id="p4"
+                            style="background-image: url('https://picsum.photos/id/1/200/200'); background-position: 100% 100%;">
+                        </div>
+                    </div>
+                    <button id="puzzle-reset" class="btn" style="margin-top: 1.5rem;" data-i18n="arcade_reset">Reiniciar
+                        Puzzle</button>
+                </div>
+
+                <!-- Runner Game -->
+                <div class="card arcade-card">
+                    <h3 data-i18n="arcade_runner_title">🏃 Cyber Runner</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;"
+                        data-i18n="arcade_runner_desc">Click o Espacio para saltar los Bugs.</p>
+                    <div class="runner-container">
+                        <canvas id="runner-canvas" width="400" height="150"></canvas>
+                        <div id="runner-ui" class="runner-overlay">
+                            <button id="runner-start" class="btn"
+                                data-i18n="arcade_runner_start">INICIAR_EJECUCIÓN</button>
+                            <div id="runner-score" style="display: none;">Score: 0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="unity-lab" class="reveal" style="margin-top: 6rem;">
+            <h2 class="section-title" data-i18n="unity_lab_title">Unity Prototyping Lab</h2>
+
+            <div class="unity-lab-container">
+                <div class="game-selector">
+                    <div class="game-card active" onclick="selectUnityGame('Jam42')" data-game="Jam42">
+                        <div class="game-thumb">
+                            <img src="https://img.itch.zone/aW1nLzEwMTMwMDQ3LnBuZw==/315x250%23c/XC6odN.png"
+                                alt="Jam42">
+                        </div>
+                        <div class="game-info">
+                            <h3>FastPiscine</h3>
+                            <p>Game Jam #42</p>
+                        </div>
+                    </div>
+                    <div class="game-card" onclick="selectUnityGame('SiDiosQuiere')" data-game="SiDiosQuiere">
+                        <div class="game-thumb">
+                            <img src="https://img.itch.zone/aW1nLzEyOTY1OTYyLnBuZw==/original/p2WMZI.png"
+                                alt="SiDiosQuiere">
+                        </div>
+                        <div class="game-info">
+                            <h3>SiDiosQuiere</h3>
+                            <p>Simulation Prototype</p>
+                        </div>
+                    </div>
+                    <div class="game-card" onclick="selectUnityGame('JuniorPiscine')" data-game="JuniorPiscine">
+                        <div class="game-thumb">
+                            <img src="https://i.imgur.com/nDOjxol.jpeg" alt="JuniorPiscine">
+                        </div>
+                        <div class="game-info">
+                            <h3>JuniorPiscine</h3>
+                            <p>Technical Showcase</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="unity-player-wrapper">
+                    <div id="unity-container" class="unity-desktop card">
+                        <canvas id="unity-canvas" width="1280" height="720"></canvas>
+                        <div id="unity-loading-bar">
+                            <div id="unity-logo"></div>
+                            <div class="loading-text">BOOTING_CORE_SYSTEM...</div>
+                            <div id="unity-progress-bar-empty">
+                                <div id="unity-progress-bar-full"></div>
+                            </div>
+                        </div>
+                        <div id="unity-warning"></div>
+                        <div class="unity-mobile-warning">
+                            <div class="warning-icon">🖥️</div>
+                            <h3 data-i18n="unity_mobile_title">Entorno no compatible</h3>
+                            <p data-i18n="unity_mobile_desc">Los prototipos Unity WebGL requieren un entorno de
+                                escritorio con aceleración por hardware para una ejecución óptima.</p>
+                        </div>
+                        <div id="unity-footer">
+                            <div id="unity-webgl-logo"></div>
+                            <div id="unity-build-title">MSV SYSTEMS - REALTIME ENGINE</div>
+                            <button id="unity-fullscreen-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="unity-controls">
+                        <button id="boot-game-btn" class="unity-boot-btn" onclick="bootCurrentGame()">
+                            <span class="btn-glitch-content">BOOT_SYSTEM_v3.0</span>
+                            <span class="btn-glitch-layers">
+                                <span>BOOT_SYSTEM_v3.0</span>
+                                <span>BOOT_SYSTEM_v3.0</span>
+                                <span>BOOT_SYSTEM_v3.0</span>
+                            </span>
+                        </button>
+                        <p class="unity-disclaimer" data-i18n="unity_disclaimer">* Requiere hardware compatible con
+                            WebGL 2.0 y una conexión estable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="reveal contact-section">
+            <div class="cta-box">
+                <h2 data-i18n="contact_title">Construyamos la próxima gran experiencia.</h2>
+                <a href="mailto:manuelsanchezies@gmail.com" class="email-link">manuelsanchezies@gmail.com</a>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-i18n="contact_subtitle">Ubicado en
+                    Málaga, España | Disponible para colaboración remota internacional.</p>
+                <div class="social-links" style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <a href="https://github.com/Trollan" target="_blank"
+                        style="color: white; opacity: 0.7; transition: 0.3s;" onmouseover="this.style.opacity=1"
+                        onmouseout="this.style.opacity=0.7">GitHub</a>
+                    <a href="https://www.linkedin.com/in/manuel-s%C3%A1nchez-villalba-340aab220/" target="_blank"
+                        style="color: white; opacity: 0.7; transition: 0.3s;" onmouseover="this.style.opacity=1"
+                        onmouseout="this.style.opacity=0.7">LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Terminal UI -->
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <button id="debug-toggle" class="floating-btn" title="Toggle Debug Mode">🐞</button>
+        <button id="achievements-toggle" class="floating-btn" title="Trophy Room">🏆</button>
+        <button id="audio-toggle" class="floating-btn active">🔊</button>
+        <button id="terminal-toggle" class="floating-btn">⌨️</button>
+    </div>
+
+    <!-- Debug Overlay -->
+    <div id="debug-watcher" class="debug-watcher">
+        <div class="debug-header">DEBUG_MONITOR_V1.0</div>
+        <div class="debug-line">SCROLL_Y: <span id="debug-scroll">0</span>px</div>
+        <div class="debug-line">MOUSE_X: <span id="debug-mouse-x">0</span></div>
+        <div class="debug-line">MOUSE_Y: <span id="debug-mouse-y">0</span></div>
+        <div class="debug-line">ACTIVE_SEC: <span id="debug-section">NONE</span></div>
+        <div class="debug-line">ACH_COUNT: <span id="debug-ach">0</span></div>
+        <div class="debug-line">OS_STATE: <span style="color: #0f0;">STABLE</span></div>
+    </div>
+    <div id="debug-reticle" class="debug-reticle"></div>
+
+    <div class="terminal-container" id="terminal-container">
+        <div class="terminal-header">
+            <span>msv_terminal.exe</span>
+            <span style="color: var(--accent); cursor: pointer;" id="terminal-close">X</span>
+        </div>
+        <div class="terminal-body" id="terminal-output">
+            Welcome to MSV Systems v3.0...
+            Type 'help' to begin.
+        </div>
+        <div class="terminal-input-line">
+            <span>></span>
+            <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+
+    <footer style="padding: 3rem 0; text-align: center; border-top: 1px solid var(--border); margin-top: 5rem;">
+        <p style="color: var(--text-secondary); font-size: 0.8rem;" data-i18n="footer_copy">&copy; 2026 Manuel Sánchez
+            Villalba. Diseñado para impactar.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
